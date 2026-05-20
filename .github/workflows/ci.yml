@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup JFrog CLI
+        uses: jfrog/setup-jfrog-cli@v4
+        env:
+          JF_URL: ${{ secrets.JF_URL }}
+          JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
+
+      - name: Configure npm with Artifactory
+        run: jf npmc --repo-resolve npm-virtual --repo-deploy npm-local
+
+      - name: Install dependencies
+        run: jf npm install
+
+      - name: Run tests
+        run: npm test
+
+      - name: Publish to Artifactory
+        if: github.ref == 'refs/heads/main'
+        run: |
+          jf npm publish
+          jf rt build-publish
