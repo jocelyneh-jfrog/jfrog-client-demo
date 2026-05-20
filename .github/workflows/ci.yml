@@ -32,7 +32,7 @@ jobs:
             --repo-deploy npm-local \
             --server-id-resolve setup-jfrog-cli-server \
             --server-id-deploy setup-jfrog-cli-server
-
+#added the namespaces
       - name: Install dependencies
         run: jf npm install
 
