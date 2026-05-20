@@ -1,0 +1,13 @@
+{
+  "name": "jfrog-client-demo",
+  "version": "1.0.0",
+  "description": "My npm project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"No tests yet\" && exit 0",
+    "build": "echo \"No build yet\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
