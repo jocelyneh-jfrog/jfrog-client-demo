@@ -33,8 +33,24 @@ jobs:
             --server-id-resolve setup-jfrog-cli-server \
             --server-id-deploy setup-jfrog-cli-server
 
-      - name: Create npm cache folder
+        - name: Create npm cache folder
         run: mkdir -p /home/runner/.npm/_cacache
+
+      - name: Clear Artifactory npm-remote cache
+        run: |
+          jf rt del "npm-remote/lodash/-/" --quiet
+          jf rt del "npm-remote/axios/-/" --quiet
+          jf rt del "npm-remote/minimist/-/" --quiet
+          jf rt del "npm-remote/serialize-javascript/-/" --quiet
+          jf rt del "npm-remote/jsonwebtoken/-/" --quiet
+          jf rt del "npm-remote/node-uuid/-/" --quiet
+          jf rt del "npm-remote/express/-/" --quiet
+          jf rt del "npm-remote/mongoose/-/" --quiet
+          jf rt del "npm-remote/node-fetch/-/" --quiet
+          jf rt del "npm-remote/dotenv/-/" --quiet
+
+      - name: Install dependencies
+        run: jf npm install --build-name=${{ github.repository }} --build-number=${{ github.run_number }}
 
       - name: Install dependencies
         run: jf npm install --build-name=${{ github.repository }} --build-number=${{ github.run_number }}
