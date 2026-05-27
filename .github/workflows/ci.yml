@@ -37,13 +37,32 @@ jobs:
         run: mkdir -p /home/runner/.npm/_cacache
 
       - name: Install dependencies
-        run: jf npm install
+        run: jf npm install --build-name=${{ github.repository }} --build-number=${{ github.run_number }}
 
       - name: Run tests
         run: npm test
 
+      # ── Scan 1: audit your source code and dependencies ──────────────────
+      - name: Audit dependencies (jf audit)
+        run: jf audit --npm
+
+      # ── Scan 2: scan the package file before publishing ──────────────────
+      - name: Build package
+        run: npm pack
+
+      - name: Scan package file (jf scan)
+        run: jf scan "*.tgz"
+
+      # ── Publish ──────────────────────────────────────────────────────────
       - name: Publish to Artifactory
         if: github.ref == 'refs/heads/main'
-        run: |
-          jf npm publish
-          jf rt build-publish
+        run: jf npm publish --build-name=${{ github.repository }} --build-number=${{ github.run_number }}
+
+      - name: Publish build info
+        if: github.ref == 'refs/heads/main'
+        run: jf rt build-publish ${{ github.repository }} ${{ github.run_number }}
+
+      # ── Scan 3: scan the full build in Artifactory after publishing ───────
+      - name: Build scan (jf build-scan)
+        if: github.ref == 'refs/heads/main'
+        run: jf build-scan ${{ github.repository }} ${{ github.run_number }}
