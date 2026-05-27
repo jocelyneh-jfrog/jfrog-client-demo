@@ -33,7 +33,7 @@ jobs:
             --server-id-resolve setup-jfrog-cli-server \
             --server-id-deploy setup-jfrog-cli-server
 
-        - name: Create npm cache folder
+      - name: Create npm cache folder
         run: mkdir -p /home/runner/.npm/_cacache
 
       - name: Clear Artifactory npm-remote cache
