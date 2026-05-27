@@ -47,7 +47,7 @@ jobs:
 
       - name: Build package
         run: npm pack
-
+#turning curation running again
       - name: Scan package file (jf scan)
         run: jf scan "*.tgz"
 
