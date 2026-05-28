@@ -51,7 +51,7 @@ jobs:
 
       - name: Install dependencies
         continue-on-error: true
-        run: jf npm install --build-name=jfrog-client-demo --build-number=${{ github.run_number }}
+        run: jf npm install --build-name=CI --build-number=${{ github.run_number }}
 
       - name: Run tests
         run: npm test
@@ -69,13 +69,13 @@ jobs:
 
       - name: Publish to Artifactory
         if: github.ref == 'refs/heads/main'
-        run: jf npm publish --build-name=jfrog-client-demo --build-number=${{ github.run_number }}
+        run: jf npm publish --build-name=CI --build-number=${{ github.run_number }}
 
       - name: Publish build info
         if: github.ref == 'refs/heads/main'
-        run: jf rt build-publish jfrog-client-demo ${{ github.run_number }}
+        run: jf rt build-publish CI ${{ github.run_number }}
 
       - name: Build scan (jf build-scan)
         if: github.ref == 'refs/heads/main'
         continue-on-error: true
-        run: jf build-scan jfrog-client-demo ${{ github.run_number }} --fail
+        run: jf build-scan CI ${{ github.run_number }} --fail
