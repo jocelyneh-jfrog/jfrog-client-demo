@@ -63,9 +63,9 @@ jobs:
       - name: Build package
         run: npm pack
 
-      - name: Scan package file (jf scan)
+      - name: Scan source files (jf scan)
         continue-on-error: true
-        run: jf scan "*.tgz" --package-type=npm
+        run: jf scan . --watches=npm-watch --format=table
 
       - name: Publish to Artifactory
         if: github.ref == 'refs/heads/main'
