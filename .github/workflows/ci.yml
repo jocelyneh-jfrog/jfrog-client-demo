@@ -82,6 +82,9 @@ jobs:
           curl -X POST \
             -H "Authorization: Bearer ${{ secrets.JF_ACCESS_TOKEN }}" \
             -H "Content-Type: application/json" \
-            -d '{"build_name":"jocelyneh-jfrog/jfrog-client-demo","build_number":"${{ github.run_number }}"}' \
+            -d '{
+              "buildName": "jocelyneh-jfrog/jfrog-client-demo",
+              "buildNumber": "${{ github.run_number }}",
+              "rescan": false
+            }' \
             "${{ secrets.JF_URL }}/xray/api/v1/scanBuild"
-      
