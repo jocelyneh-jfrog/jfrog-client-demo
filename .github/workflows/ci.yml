@@ -58,14 +58,11 @@ jobs:
 
       - name: Audit dependencies (jf audit)
         continue-on-error: true
-        run: jf audit --npm
+        run: jf audit --npm --format=table --extended-table
 
-      - name: Build package
-        run: npm pack
-
-      - name: Scan source files (jf scan)
+      - name: Scan for secrets and SAST
         continue-on-error: true
-        run: jf scan . --watches=npm-watch --format=table
+        run: jf audit --npm --secrets --sast --iac --format=table
 
       - name: Publish to Artifactory
         if: github.ref == 'refs/heads/main'
@@ -74,17 +71,9 @@ jobs:
       - name: Publish build info
         if: github.ref == 'refs/heads/main'
         run: jf rt build-publish "jocelyneh-jfrog/jfrog-client-demo" ${{ github.run_number }}
-    
+
       - name: Build scan (jf build-scan)
         if: github.ref == 'refs/heads/main'
         continue-on-error: true
-        run: |
-          curl -X POST \
-            -H "Authorization: Bearer ${{ secrets.JF_ACCESS_TOKEN }}" \
-            -H "Content-Type: application/json" \
-            -d '{
-              "buildName": "jocelyneh-jfrog/jfrog-client-demo",
-              "buildNumber": "${{ github.run_number }}",
-              "rescan": false
-            }' \
-            "${{ secrets.JF_URL }}/xray/api/v1/scanBuild"
+        timeout-minutes: 5
+        run: jf build-scan "jocelyneh-jfrog/jfrog-client-demo" ${{ github.run_number }} --fail --trigger-scan-retries=3
