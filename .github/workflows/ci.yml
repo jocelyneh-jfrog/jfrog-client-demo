@@ -79,4 +79,4 @@ jobs:
         if: github.ref == 'refs/heads/main'
         continue-on-error: true
         timeout-minutes: 5
-        run: jf build-scan "jocelyneh-jfrog/jfrog-client-demo" ${{ github.run_number }} --fail --async
+        run: jf build-scan "jocelyneh-jfrog/jfrog-client-demo" ${{ github.run_number }} --fail --trigger-scan-retries=3
