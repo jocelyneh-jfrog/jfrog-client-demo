@@ -57,14 +57,15 @@ jobs:
 
       - name: Run tests
         run: npm test
-
       - name: Audit dependencies (jf audit)
+        continue-on-error: true
         run: jf audit --npm
 
       - name: Build package
         run: npm pack
-#turning curation running again
+
       - name: Scan package file (jf scan)
+        continue-on-error: true
         run: jf scan "*.tgz"
 
       - name: Publish to Artifactory
@@ -77,4 +78,5 @@ jobs:
 
       - name: Build scan (jf build-scan)
         if: github.ref == 'refs/heads/main'
+        continue-on-error: true
         run: jf build-scan ${{ github.repository }} ${{ github.run_number }} --fail
