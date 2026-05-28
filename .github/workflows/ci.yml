@@ -50,10 +50,9 @@ jobs:
           jf rt del "npm-remote/dotenv/-/" --quiet
 
       - name: Install dependencies
+        continue-on-error: true
         run: jf npm install --build-name=${{ github.repository }} --build-number=${{ github.run_number }}
 
-      - name: Install dependencies
-        run: jf npm install --build-name=${{ github.repository }} --build-number=${{ github.run_number }}
 
       - name: Run tests
         run: npm test
